@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Purifier - FreshIt Water Research Engineering</title>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Stylesheet -->
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.5; }
+        
+        /* Container Layout */
+        .container { width: 92%; max-width: 1200px; margin: 0 auto; }
+        .hidden { display: none !important; }
+
+        /* Top Bar Section */
+        .top-bar { background: #1a252f; color: #fff; font-size: 13px; padding: 8px 0; }
+        .top-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .top-bar i { color: #00a8ff; margin-right: 5px; }
+        .divider { margin: 0 8px; color: #555; }
+
+        /* Main Navbar Section */
+        .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #00a8ff; }
+        .brand-title { font-weight: bold; font-size: 22px; color: #00a8ff; line-height: 1.1; }
+        .brand-sub { font-size: 11px; color: #666; display: block; }
+
+        /* Nav Menu Fixes */
+        .main-menu > ul { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0; }
+        .main-menu a { text-decoration: none; color: #333; font-weight: 600; font-size: 14px; transition: color 0.3s; }
+        .main-menu a:hover { color: #00a8ff; }
+        
+        /* STRICT DROPDOWN AUTO-HIDE & VERTICAL FIX */
+        .dropdown { position: relative; padding: 10px 0; }
+        
+        .dropdown-menu { 
+            display: none !important; /* Auto Hide by Default */
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            background: #ffffff; 
+            width: 260px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+            border-radius: 6px; 
+            padding: 6px 0; 
+            z-index: 9999;
+            list-style: none !important;
+            flex-direction: column !important; /* Force Vertical Stack */
+            gap: 0 !important;
+            border: 1px solid #eee;
+        }
+
+        /* Show Dropdown on Hover */
+        .dropdown:hover .dropdown-menu { 
+            display: flex !important; 
+        }
+
+        .dropdown-menu li { 
+            width: 100% !important; 
+            display: block !important; 
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .dropdown-menu li a { 
+            display: block !important; 
+            padding: 10px 16px !important; 
+            font-weight: 500; 
+            font-size: 13px; 
+            color: #333;
+            border-bottom: 1px solid #f2f2f2; 
+            white-space: normal; 
+            text-align: left;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .dropdown-menu li:last-child a { border-bottom: none; }
+        .dropdown-menu li a:hover { background: #f0f8ff; color: #00a8ff; }
+
+        /* Navbar Right Actions */
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .cart-icon { position: relative; font-size: 20px; cursor: pointer; color: #333; }
+        .cart-badge { position: absolute; top: -8px; right: -10px; background: #ff4757; color: #fff; font-size: 11px; border-radius: 50%; padding: 2px 6px; font-weight: bold; }
+        #cpanel-btn { background: #00a8ff; color: #fff; border: none; padding: 9px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        #cpanel-btn:hover { background: #0088cc; }
+
+        /* Hero Image Slider */
+        .hero-slider { position: relative; max-width: 1200px; margin: 20px auto 10px; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .slides-container { position: relative; height: 360px; background-color: #eaeaea; }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; align-items: center; justify-content: center; }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slide-caption { position: absolute; bottom: 30px; left: 30px; background: rgba(0, 0, 0, 0.75); color: #fff; padding: 15px 25px; border-radius: 8px; border-left: 4px solid #00a8ff; max-width: 80%; }
+        .slide-caption h2 { font-size: 1.5rem; color: #00a8ff; margin-bottom: 5px; }
+
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; background: rgba(0, 0, 0, 0.5); color: white; border: none; padding: 10px 14px; cursor: pointer; border-radius: 50%; }
+        .prev-btn { left: 15px; } .next-btn { right: 15px; }
+        .slider-dots { position: absolute; bottom: 12px; width: 100%; text-align: center; z-index: 2; }
+        .dot { display: inline-block; width: 10px; height: 10px; margin: 0 4px; background-color: rgba(255, 255, 255, 0.6); border-radius: 50%; cursor: pointer; }
+        .dot.active { background-color: #00a8ff; }
+
+        /* Main Layout (Sidebar + Content) */
+        .main-layout { display: flex; gap: 25px; margin: 25px auto; }
+        .sidebar { width: 260px; flex-shrink: 0; }
+        .widget { background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .widget h3 { font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #00a8ff; padding-bottom: 5px; color: #2c3e50; }
+        .search-box { display: flex; gap: 5px; }
+        .search-box input { flex: 1; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+        .search-box button { background: #00a8ff; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+        .category-widget ul { list-style: none; }
+        .category-widget li a { text-decoration: none; color: #555; display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; font-weight: 500; }
+        .category-widget li a:hover { color: #00a8ff; padding-left: 3px; }
+
+        .content-area { flex: 1; }
+        .page-header { background: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        
+        /* Products Grid Styling */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+        .product-card { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; border: 1px solid #eee; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .sale-badge { position: absolute; top: 10px; left: 10px; background: #ff4757; color: white; padding: 3px 8px; font-size: 11px; border-radius: 3px; font-weight: bold; z-index: 2; }
+        
+        /* Product Image Box Fix */
+        .image-box { height: 180px; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 12px; border-bottom: 1px solid #f2f2f2; }
+        .image-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .product-details { padding: 15px; }
+        .cat-tag { font-size: 11px; color: #888; text-transform: uppercase; font-weight: bold; }
+        .product-details h3 { font-size: 14px; margin: 5px 0 8px; height: 38px; overflow: hidden; color: #222; line-height: 1.3; }
+        .price { font-weight: bold; color: #00a8ff; font-size: 16px; margin-bottom: 6px; }
+        .old-price { text-decoration: line-through; color: #aaa; font-size: 12px; margin-right: 5px; }
+        .stock-info { font-size: 12px; color: #2e7d32; margin-bottom: 12px; font-weight: bold; }
+        .btn-cart { width: 100%; background: #2ed573; color: white; border: none; padding: 9px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-cart:hover { background: #26af5f; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); overflow-y: auto; padding: 20px 0; }
+        .modal-content { background: #fff; margin: 30px auto; max-width: 800px; padding: 25px; border-radius: 10px; position: relative; }
+        .small-modal { max-width: 450px; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: #888; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px 12px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
+        .btn-submit { width: 100%; padding: 10px; background: #2ed573; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-orange { background: #ff7f50; }
+        .btn-orange:hover { background: #e06336; }
+
+        /* Admin Section Styling */
+        .admin-card-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .admin-section-title { font-size: 16px; color: #2c3e50; font-weight: bold; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #00a8ff; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .stat-icon { font-size: 24px; color: #00a8ff; }
+        .table-responsive { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; }
+        th { background: #f1f5f9; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; }
+        .badge.pending { background: #ffeaa7; color: #d63031; }
+        .badge.instock { background: #e3f9e5; color: #1fb141; font-weight: bold; }
+        .btn-logout { background: #ff4757; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; float: right; font-weight: bold; }
+
+        /* Footer */
+        footer { background: #1a252f; color: #ccc; padding: 40px 0 0; margin-top: 40px; font-size: 13px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; padding-bottom: 30px; }
+        .foot-col h3 { color: #fff; margin-bottom: 15px; font-size: 15px; }
+        .foot-col p { margin-bottom: 8px; line-height: 1.5; }
+        .footer-bottom { background: #111822; text-align: center; padding: 15px; color: #777; font-size: 12px; }
+
+        .floating-call-btn { position: fixed; bottom: 20px; right: 20px; background: #2ed573; color: white; padding: 10px 18px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 99; }
+
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .slides-container { height: 200px; }
+            .top-container { flex-direction: column; text-align: center; }
+            .main-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-container">
+            <div>
+                <i class="fa-solid fa-location-dot"></i> 31/1 Kazi Alauddin Road, Nazira Bazar, Dhaka
+                <span class="divider">|</span>
+                <i class="fa-solid fa-phone"></i> 01729 916521, 01913 450855
+                <span class="divider">|</span>
+                <i class="fa-solid fa-envelope"></i> khan.sabbir1000@gmail.com
+            </div>
+            <div>
+                <b>Proprietor:</b> Ibna Jahid Sabbir (Water Treatment Specialist)
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-hand-holding-droplet"></i>
+                <div class="logo-text">
+                    <span class="brand-title">FreshIt</span>
+                    <span class="brand-sub">Water Research Engineering</span>
+                </div>
+            </div>
+
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('All')">Home</a></li>
+                    
+                    <!-- Fixed Dropdown -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0)">Categories <i class="fa-solid fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Water Treatment Service')">Water Treatment Service</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('ETP Plant')">ETP Plant</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('STP Plant')">STP Plant</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Disinfection Plant')">Disinfection Plant</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Drinking Water Treatment Plant')">Drinking Water Treatment Plant</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Iron Removal Plant')">Iron Removal Plant</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Reverse Osmosis')">Reverse Osmosis (RO System)</a></li>
+                            <li><a href="javascript:void(0)" onclick="filterCategory('Alkaline')">Alkaline Water Purifier</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="javascript:void(0)">Water Treatment</a></li>
+                    <li><a href="javascript:void(0)">Service</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-right">
+                <div class="cart-icon">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <button id="cpanel-btn" onclick="toggleAdminModal()">
+                    <i class="fa-solid fa-user-gear"></i> Admin cPanel
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner Slider -->
+    <section class="container hero-slider">
+        <div class="slides-container">
+            <div class="slide active">
+                <img src="https://images.unsplash.com/photo-1542013936693-884638332954?w=1000&q=80" alt="Industrial RO Water Plant">
+                <div class="slide-caption">
+                    <h2>Advanced Industrial RO Systems</h2>
+                    <p>উন্নত প্রযুক্তির ইন্ডাস্ট্রিয়াল রিভার্স অসমোসিস ওয়াটার প্ল্যান্ট</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?w=1000&q=80" alt="Commercial Water Treatment">
+                <div class="slide-caption">
+                    <h2>Commercial Water Treatment Plant</h2>
+                    <p>বাসাবাড়ি ও ফ্যাক্টরির জন্য নির্ভরযোগ্য ওয়াটার ট্রিটমেন্ট সার্ভিস</p>
+                </div>
+            </div>
+        </div>
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="slider-dots">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+        </div>
+    </section>
+
+    <!-- Admin cPanel Modal -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleAdminModal()">&times;</span>
+            
+            <!-- Admin Login Form -->
+            <div id="login-box">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fa-solid fa-shield-halved fa-3x" style="color:#00a8ff"></i>
+                    <h2 style="margin-top:10px;">FreshIt Admin cPanel Login</h2>
+                </div>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>ইউজারনেম (Username):</label>
+                        <input type="text" id="username" placeholder="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>পাসওয়ার্ড (Password):</label>
+                        <input type="password" id="password" placeholder="12345" required>
+                    </div>
+                    <button type="submit" class="btn-submit">লগইন করুন</button>
+                </form>
+            </div>
+
+            <!-- Admin Dashboard Content -->
+            <div id="dashboard-box" class="hidden">
+                <div style="overflow: hidden; margin-bottom: 15px;">
+                    <h2 style="float: left;"><i class="fa-solid fa-gauge"></i> FreshIt cPanel Dashboard</h2>
+                    <button onclick="handleLogout()" class="btn-logout"><i class="fa-solid fa-power-off"></i> লগআউট</button>
+                </div>
+
+                <!-- OVERVIEW STATS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fa-solid fa-cart-arrow-down stat-icon"></i>
+                        <div>
+                            <h3>মোট অর্ডার</h3>
+                            <p id="stat-orders-count">১ টি</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-bangladeshi-taka-sign stat-icon"></i>
+                        <div>
+                            <h3>মোট বিক্রি</h3>
+                            <p id="stat-sales-total">৳ ১৪,৫০০</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADD NEW PRODUCT FORM -->
+                <div class="admin-card-box">
+                    <div class="admin-section-title"><i class="fa-solid fa-cloud-arrow-up"></i> প্রোডাক্ট আপলোড (Product Upload)</div>
+                    <form id="add-product-form" onsubmit="addNewProduct(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label>প্রোডাক্টের নাম:</label>
+                                <input type="text" id="new-prod-name" placeholder="যেমন: ETP Plant System" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ক্যাটাগরি:</label>
+                                <select id="new-prod-cat" required>
+                                    <option value="Water Treatment Service">Water Treatment Service</option>
+                                    <option value="ETP Plant">ETP Plant</option>
+                                    <option value="STP Plant">STP Plant</option>
+                                    <option value="Disinfection Plant">Disinfection Plant</option>
+                                    <option value="Drinking Water Treatment Plant">Drinking Water Treatment Plant</option>
+                                    <option value="Iron Removal Plant">Iron Removal Plant</option>
+                                    <option value="Reverse Osmosis">Reverse Osmosis</option>
+                                    <option value="Alkaline">Alkaline Water Purifier</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>বিক্রয় মূল্য (BDT):</label>
+                                <input type="number" id="new-prod-price" placeholder="15000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>পুরাতন মূল্য (BDT - ঐচ্ছিক):</label>
+                                <input type="number" id="new-prod-oldprice" placeholder="18000">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label>স্টক পরিমাণ (Stock Quantity):</label>
+                                <input type="number" id="new-prod-stock" placeholder="যেমন: 10" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>প্রোডাক্টের ছবির লিঙ্ক (Image URL):</label>
+                                <input type="url" id="new-prod-img" placeholder="https://example.com/image.jpg">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background: #00a8ff;">প্রোডাক্ট আপলোড করুন</button>
+                    </form>
+                </div>
+
+                <!-- STOCK DETAILS -->
+                <div class="admin-card-box">
+                    <div class="admin-section-title"><i class="fa-solid fa-boxes-stacked"></i> স্টক এর বিস্তারিত তথ্য (Stock Details)</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>প্রোডাক্টের নাম</th>
+                                    <th>ক্যাটাগরি</th>
+                                    <th>মূল্য</th>
+                                    <th>অবশিষ্ট স্টক (Stock Qty)</th>
+                                    <th>অবস্থা</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-list-table">
+                                <tr id="stock-row-1">
+                                    <td>City Wellness Alkaline Water Purifier</td>
+                                    <td>Alkaline</td>
+                                    <td>৳ ১৪,৫০০</td>
+                                    <td id="stock-qty-1">15</td>
+                                    <td><span class="badge instock">In Stock</span></td>
+                                </tr>
+                                <tr id="stock-row-2">
+                                    <td>Deng Yuan 281C Blue RO Water Filter</td>
+                                    <td>Reverse Osmosis</td>
+                                    <td>৳ ১৮,০০০</td>
+                                    <td id="stock-qty-2">8</td>
+                                    <td><span class="badge instock">In Stock</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ORDER LIST -->
+                <div class="admin-card-box">
+                    <div class="admin-section-title"><i class="fa-solid fa-list-check"></i> অর্ডারের তালিকা (Order List)</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>অর্ডার আইডি</th>
+                                    <th>গ্রাহকের নাম</th>
+                                    <th>ফোন নম্বর</th>
+                                    <th>প্রোডাক্টের নাম</th>
+                                    <th>মূল্য</th>
+                                    <th>স্ট্যাটাস</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-list">
+                                <tr>
+                                    <td>#FSH-101</td>
+                                    <td>কাজী আল-আমিন</td>
+                                    <td>01729916521</td>
+                                    <td>City Wellness Alkaline Water Purifier</td>
+                                    <td>৳ ১৪,৫০০</td>
+                                    <td><span class="badge pending">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content small-modal">
+            <span class="close-btn" onclick="closeCheckoutModal()">&times;</span>
+            <h2><i class="fa-solid fa-cart-shopping"></i> অর্ডার কনফার্ম করুন</h2>
+            <br>
+            <form id="checkout-form" onsubmit="submitCustomerOrder(event)">
+                <div class="form-group">
+                    <label>প্রোডাক্টের নাম:</label>
+                    <input type="text" id="order-product-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label>মূল্য (BDT):</label>
+                    <input type="text" id="order-product-price" readonly>
+                </div>
+                <div class="form-group">
+                    <label>আপনার নাম:</label>
+                    <input type="text" id="customer-name" placeholder="আপনার পূর্ণ নাম" required>
+                </div>
+                <div class="form-group">
+                    <label>মোবাইল নম্বর:</label>
+                    <input type="tel" id="customer-phone" placeholder="017XXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>ডেলিভারি ঠিকানা:</label>
+                    <textarea id="customer-address" rows="2" placeholder="পূর্ণ ঠিকানা লিখুন" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit btn-orange">অর্ডার প্লেস করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Layout Content -->
+    <div class="container main-layout">
+        
+        <!-- Sidebar Filter Area -->
+        <aside class="sidebar">
+            <div class="widget search-widget">
+                <h3>Search</h3>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search products...">
+                    <button type="button" onclick="searchProducts()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+
+            <div class="widget price-widget">
+                <h3>Filter By Price</h3>
+                <input type="range" id="price-range" min="100" max="99500" value="99500" style="width:100%" oninput="updatePriceFilter(this.value)">
+                <div style="margin-top:8px; font-size:12px;">
+                    Price: <b>৳ 100 — ৳ <span id="price-val">99,500</span></b>
+                    <button onclick="filterByPriceBtn()" style="float:right; padding:2px 8px; cursor:pointer;">Filter</button>
+                </div>
+            </div>
+
+            <div class="widget category-widget">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('All')">All Products</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Water Treatment Service')">Water Treatment Service</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('ETP Plant')">ETP Plant</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('STP Plant')">STP Plant</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Disinfection Plant')">Disinfection Plant</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Drinking Water Treatment Plant')">Drinking Water Treatment Plant</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Iron Removal Plant')">Iron Removal Plant</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Reverse Osmosis')">Reverse Osmosis</a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('Alkaline')">Alkaline Water Purifier</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Products Display -->
+        <main class="content-area">
+            <div class="page-header">
+                <h1 style="font-size: 20px;">Household Water Purifiers</h1>
+                <p style="font-size: 13px; color: #666; margin-top: 4px;">City Water Purifier থেকে সংগৃহীত সেরা হাউসহোল্ড মডেলসমূহ</p>
+            </div>
+
+            <!-- Product Cards Grid with REAL PICTURES -->
+            <div class="product-grid" id="product-list">
+
+                <!-- Product 1 -->
+                <div class="product-card" data-category="Alkaline" data-price="14500" id="card-prod-1">
+                    <div class="sale-badge">Sale!</div>
+                    <div class="image-box">
+                        <img src="https://citywaterpurifier.com/wp-content/uploads/2021/04/City-Wellness-Alkaline.jpg" alt="City Wellness Alkaline Water Purifier" onerror="this.src='https://images.unsplash.com/photo-1542013936693-884638332954?w=500'">
+                    </div>
+                    <div class="product-details">
+                        <span class="cat-tag">Alkaline Water Purifier</span>
+                        <h3>City Wellness Alkaline Water Purifier</h3>
+                        <div class="price"><span class="old-price">৳ ১৮,৫০০</span> ৳ ১৪,৫০০</div>
+                        <div class="stock-info">Stock: <span id="card-stock-1">15</span> Pcs</div>
+                        <button class="btn-cart" onclick="openCheckoutModal('City Wellness Alkaline Water Purifier', '৳ ১৪,৫০০', 'stock-qty-1', 'card-stock-1')">অর্ডার করুন</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card" data-category="Reverse Osmosis" data-price="18000" id="card-prod-2">
+                    <div class="sale-badge">Sale!</div>
+                    <div class="image-box">
+                        <img src="https://citywaterpurifier.com/wp-content/uploads/2021/03/Deng-Yuan-281C-Blue.jpg" alt="Deng Yuan 281C Blue RO Water Filter" onerror="this.src='https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?w=500'">
+                    </div>
+                    <div class="product-details">
+                        <span class="cat-tag">Reverse Osmosis</span>
+                        <h3>Deng Yuan 281C Blue RO Water Filter</h3>
+                        <div class="price"><span class="old-price">৳ ২২,০০০</span> ৳ ১৮,০০০</div>
+                        <div class="stock-info">Stock: <span id="card-stock-2">8</span> Pcs</div>
+                        <button class="btn-cart" onclick="openCheckoutModal('Deng Yuan 281C Blue RO Water Filter', '৳ ১৮,০০০', 'stock-qty-2', 'card-stock-2')">অর্ডার করুন</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card" data-category="Reverse Osmosis" data-price="15500" id="card-prod-3">
+                    <div class="sale-badge">Sale!</div>
+                    <div class="image-box">
+                        <img src="https://citywaterpurifier.com/wp-content/uploads/2020/09/Deng-Yuan-101-RO-Water-Purifier.jpg" alt="Deng Yuan HA-101 RO Water Purifier" onerror="this.src='https://images.unsplash.com/photo-1542013936693-884638332954?w=500'">
+                    </div>
+                    <div class="product-details">
+                        <span class="cat-tag">Reverse Osmosis</span>
+                        <h3>Deng Yuan HA-101 RO Water Purifier</h3>
+                        <div class="price"><span class="old-price">৳ ১৭,৫০০</span> ৳ ১৫,৫০০</div>
+                        <div class="stock-info">Stock: <span id="card-stock-3">12</span> Pcs</div>
+                        <button class="btn-cart" onclick="openCheckoutModal('Deng Yuan HA-101 RO Water Purifier', '৳ ১৫,৫০০', 'stock-qty-3', 'card-stock-3')">অর্ডার করুন</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card" data-category="Reverse Osmosis" data-price="16500" id="card-prod-4">
+                    <div class="sale-badge">Sale!</div>
+                    <div class="image-box">
+                        <img src="https://citywaterpurifier.com/wp-content/uploads/2021/04/Heron-Max-RO.jpg" alt="Heron Max Water Purifier" onerror="this.src='https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?w=500'">
+                    </div>
+                    <div class="product-details">
+                        <span class="cat-tag">Reverse Osmosis</span>
+                        <h3>Heron Max 6-Stage RO Water Purifier</h3>
+                        <div class="price"><span class="old-price">৳ ১৯,০০০</span> ৳ ১৬,৫০০</div>
+                        <div class="stock-info">Stock: <span id="card-stock-4">10</span> Pcs</div>
+                        <button class="btn-cart" onclick="openCheckoutModal('Heron Max 6-Stage RO Water Purifier', '৳ ১৬,৫০০', 'stock-qty-4', 'card-stock-4')">অর্ডার করুন</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Area -->
+    <footer>
+        <div class="container footer-grid">
+            <div class="foot-col">
+                <h3>FreshIt Water Research Engineering</h3>
+                <p>আমরা বাসাবাড়ি, অফিস ও ইন্ডাস্ট্রির জন্য সর্বাধুনিক প্রযুক্তির ওয়াটার পিউরিফায়ার ও ওয়াটার ট্রিটমেন্ট প্ল্যান্ট সরবরাহ করে থাকি।</p>
+            </div>
+            <div class="foot-col">
+                <h3>যোগাযোগ ও ঠিকানা</h3>
+                <p><i class="fa-solid fa-location-dot"></i> 31/1 Kazi Alauddin Road, Nazira Bazar, Dhaka.</p>
+                <p><i class="fa-solid fa-phone"></i> 01729 916521, 01913 450855</p>
+                <p><i class="fa-solid fa-envelope"></i> khan.sabbir1000@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 FreshIt Water Research Engineering. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Call Button -->
+    <a href="tel:01729916521" class="floating-call-btn">
+        <i class="fa-solid fa-phone"></i> 01729-916521
+    </a>
+
+    <!-- Application JavaScript Code -->
+    <script>
+        let orderCounter = 102;
+        let selectedProductStockId = null;
+        let selectedProductCardStockId = null;
+
+        /* Hero Image Slider Logic */
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let slideInterval = setInterval(autoSlide, 4000);
+
+        function showSlide(index) {
+            if (index >= slides.length) currentSlideIndex = 0;
+            else if (index < 0) currentSlideIndex = slides.length - 1;
+            else currentSlideIndex = index;
+
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlideIndex));
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentSlideIndex));
+        }
+
+        function moveSlide(step) {
+            clearInterval(slideInterval);
+            showSlide(currentSlideIndex + step);
+            slideInterval = setInterval(autoSlide, 4000);
+        }
+
+        function currentSlide(index) {
+            clearInterval(slideInterval);
+            showSlide(index);
+            slideInterval = setInterval(autoSlide, 4000);
+        }
+
+        function autoSlide() { showSlide(currentSlideIndex + 1); }
+
+        /* Admin Modal Logic */
+        function toggleAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if (user === 'admin' && pass === '12345') {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('dashboard-box').classList.remove('hidden');
+            } else {
+                alert('ভুল ইউজারনেম বা পাসওয়ার্ড! (Username: admin, Password: 12345)');
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('login-box').classList.remove('hidden');
+            document.getElementById('dashboard-box').classList.add('hidden');
+        }
+
+        /* Product Upload Dynamic Logic */
+        function addNewProduct(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-prod-name').value;
+            const category = document.getElementById('new-prod-cat').value;
+            const price = document.getElementById('new-prod-price').value;
+            const oldPrice = document.getElementById('new-prod-oldprice').value;
+            const stock = document.getElementById('new-prod-stock').value;
+            const imgUrl = document.getElementById('new-prod-img').value;
+
+            const prodId = 'prod-' + Date.now();
+            const stockTableId = 'stock-qty-' + prodId;
+            const cardStockId = 'card-stock-' + prodId;
+
+            // Append Product to Grid
+            const productGrid = document.getElementById('product-list');
+            const newCard = document.createElement('div');
+            
+            newCard.className = 'product-card';
+            newCard.setAttribute('data-category', category);
+            newCard.setAttribute('data-price', price);
+
+            const imageContent = imgUrl 
+                ? `<img src="${imgUrl}" alt="${title}">` 
+                : `<i class="fa-solid fa-droplet fa-3x"></i>`;
+
+            const oldPriceHTML = oldPrice ? `<span class="old-price">৳ ${Number(oldPrice).toLocaleString('bn-BD')}</span> ` : '';
+
+            newCard.innerHTML = `
+                <div class="sale-badge">Sale!</div>
+                <div class="image-box">${imageContent}</div>
+                <div class="product-details">
+                    <span class="cat-tag">${category}</span>
+                    <h3>${title}</h3>
+                    <div class="price">${oldPriceHTML}৳ ${Number(price).toLocaleString('bn-BD')}</div>
+                    <div class="stock-info">Stock: <span id="${cardStockId}">${stock}</span> Pcs</div>
+                    <button class="btn-cart" onclick="openCheckoutModal('${title}', '৳ ${Number(price).toLocaleString('bn-BD')}', '${stockTableId}', '${cardStockId}')">অর্ডার করুন</button>
+                </div>
+            `;
+
+            productGrid.prepend(newCard);
+
+            // Append Stock to Admin Table
+            const stockTable = document.getElementById('stock-list-table');
+            const stockRow = document.createElement('tr');
+            stockRow.innerHTML = `
+                <td>${title}</td>
+                <td>${category}</td>
+                <td>৳ ${Number(price).toLocaleString('bn-BD')}</td>
+                <td id="${stockTableId}">${stock}</td>
+                <td><span class="badge instock">In Stock</span></td>
+            `;
+            stockTable.prepend(stockRow);
+
+            document.getElementById('add-product-form').reset();
+            alert('নতুন প্রোডাক্ট ও স্টক সফলভাবে আপলোড করা হয়েছে!');
+            toggleAdminModal();
+        }
+
+        /* Order & Checkout Logic */
+        function openCheckoutModal(productName, price, stockTableId, cardStockId) {
+            selectedProductStockId = stockTableId;
+            selectedProductCardStockId = cardStockId;
+            
+            document.getElementById('order-product-name').value = productName;
+            document.getElementById('order-product-price').value = price;
+            document.getElementById('checkout-modal').style.display = 'block';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').style.display = 'none';
+        }
+
+        function submitCustomerOrder(e) {
+            e.preventDefault();
+            const pName = document.getElementById('order-product-name').value;
+            const pPrice = document.getElementById('order-product-price').value;
+            const cName = document.getElementById('customer-name').value;
+            const cPhone = document.getElementById('customer-phone').value;
+
+            if(selectedProductStockId) {
+                const adminStockEl = document.getElementById(selectedProductStockId);
+                const cardStockEl = document.getElementById(selectedProductCardStockId);
+                
+                if(adminStockEl && cardStockEl) {
+                    let currentStock = parseInt(adminStockEl.innerText);
+                    if(currentStock > 0) {
+                        currentStock -= 1;
+                        adminStockEl.innerText = currentStock;
+                        cardStockEl.innerText = currentStock;
+                    }
+                }
+            }
+
+            const ordersTable = document.getElementById('orders-list');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>#FSH-${orderCounter++}</td>
+                <td>${cName}</td>
+                <td>${cPhone}</td>
+                <td>${pName}</td>
+                <td>${pPrice}</td>
+                <td><span class="badge pending">Pending</span></td>
+            `;
+            ordersTable.prepend(newRow);
+
+            const cartCountEl = document.getElementById('cart-count');
+            cartCountEl.innerText = parseInt(cartCountEl.innerText) + 1;
+
+            alert('আপনার অর্ডারটি সফলভাবে জমা হয়েছে!');
+            document.getElementById('checkout-form').reset();
+            closeCheckoutModal();
+        }
+
+        /* Category Filter and Search */
+        function filterCategory(catName) {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (catName === 'All' || card.getAttribute('data-category') === catName) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function updatePriceFilter(val) {
+            document.getElementById('price-val').innerText = Number(val).toLocaleString();
+        }
+
+        function filterByPriceBtn() {
+            const maxPrice = parseFloat(document.getElementById('price-range').value);
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const cardPrice = parseFloat(card.getAttribute('data-price'));
+                if (cardPrice <= maxPrice) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
